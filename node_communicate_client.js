@@ -3,34 +3,34 @@ const SOCKETFILE = 'socket_file'
 var array = ['a'];
 var net = require( 'net' );
 
-client = net.createConnection(SOCKETFILE)
-    .on('connect',()=>{
-        console.log("Connected.");
-        client.write('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-    })
+var beacon_data=String(beacon_discover())
+function client_communicate(str_2){
+	client = net.createConnection(SOCKETFILE)
+		.on('connect',()=>{
+			console.log("Connected.");
+			console.log(str_2)
+			client.write(str_2);
+		})
 
-    .on('data', function(data) {
-    
-        data = data.toString();
+	    	.on('data', function(data) {
+			data = data.toString();
+			if(data === '__boop'){
+		    		console.info('Server sent boop. Confirming our snoot is booped.');
+		    		client.write(str_2);
+			}
+			if(data === '__disconnect'){
+				console.log('Server disconnected.')
+		    		return cleanup();
+			}
 
-        if(data === '__boop'){
-            console.info('Server sent boop. Confirming our snoot is booped.');
-            beacon_data = beacon_discover()
-            client.write(beacon_data);
-        }
-        if(data === '__disconnect'){
-            console.log('Server disconnected.')
-            return cleanup();
-        }
+		// Generic message handler
+			console.info('Server:', data)
+	    	})
 
-        // Generic message handler
-        console.info('Server:', data)
-    })
-
-    .on('error', function(data) {
-        console.error('Server not active.'); process.exit(1);
-    });
-
+	    	.on('error', function(data) {
+			console.error('Server not active.'); process.exit(1);
+	    	});
+}
 
 
 function except_duplex(data){
@@ -41,7 +41,7 @@ function except_duplex(data){
 	}
 }
 
-function beacon_discover{
+function beacon_discover(){
     var start_ms =new Date().getTime();
     var count = 0
     var Bleacon = require("bleacon");
@@ -61,7 +61,7 @@ function beacon_discover{
             var str_2 = str.slice(0,1)+str.slice(2,-2)+str.slice(-1)
             //console.log(str_2);
             //process.exit(0);
-            return str2
+            client_communicate(str_2)
         }
         console.log(payload);
     });
