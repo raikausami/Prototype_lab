@@ -10,28 +10,28 @@ function client_communicate(str_2){
 			console.log("Connected.");
 			console.log(str_2)
 			client.write(str_2);
+            process.exit(1)
 		})
 
-	    	.on('data', function(data) {
-			data = data.toString();
+	    .on('data', function(data) {
+		    data = data.toString();
 			if(data === '__boop'){
-		    		console.info('Server sent boop. Confirming our snoot is booped.');
-		    		client.write(str_2);
+		    	console.info('Server sent boop. Confirming our snoot is booped.');
+		    	client.write(str_2);
 			}
 			if(data === '__disconnect'){
 				console.log('Server disconnected.')
-		    		return cleanup();
+		    	return cleanup();
 			}
 
 		// Generic message handler
 			console.info('Server:', data)
 	    	})
 
-	    	.on('error', function(data) {
+	    .on('error', function(data) {
 			console.error('Server not active.'); process.exit(1);
-	    	});
+	    });
 }
-
 
 function except_duplex(data){
 	var number_data = array.indexOf('"'+data+'"')
@@ -63,7 +63,7 @@ function beacon_discover(){
             //process.exit(0);
             client_communicate(str_2)
         }
-        console.log(payload);
+        //console.log(payload);
     });
 }
 
