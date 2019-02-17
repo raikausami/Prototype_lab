@@ -8,7 +8,7 @@ function client_communicate(str_2){
 	client = net.createConnection(SOCKETFILE)
 		.on('connect',()=>{
 			console.log("Connected.");
-			console.log(str_2)
+			//console.log(str_2)
 			client.write(str_2);
             process.exit(1)
 		})
@@ -35,7 +35,7 @@ function client_communicate(str_2){
 
 function except_duplex(data){
 	var number_data = array.indexOf('"'+data+'"')
-	console.log(number_data)
+	//console.log(number_data)
 	if(number_data == -1){
 		array.unshift('"'+data+'"');
 	}

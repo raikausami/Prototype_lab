@@ -25,9 +25,11 @@ class Server:
         """
         #sys.stdout.write("__boop\n".format(data.decode()))
         data = connection.recv(1024)
-        sys.stdout.write("receive from client: {}\n".format(data.decode()))
-    
-
+        print(data)
+        #sys.stdout.write("receive from client: {}\n".format(data.decode()))
+        #connection.send(data)
+        #sys.stdout.write("")
+        sys.exit()
 def main():
     server = Server('socket_file')
     server.start()
