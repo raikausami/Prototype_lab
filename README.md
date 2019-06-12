@@ -1,7 +1,7 @@
 clean proto
 # Prototype_lab
 
-1.Install node.js
+1. Install node.js
 $curl -sL https://deb.nodesource.com/setup_10.x | bash -
 $apt-get install -y node.js
 
