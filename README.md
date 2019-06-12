@@ -3,12 +3,9 @@ clean proto
 
 1.Install node.js
 
-we did 
-
 $sudo dpkg -i node_latest_armhf.deb
           
-another way
-
+or
 $curl -sL https://deb.nodesource.com/setup_10.x | bash -
 $apt-get install -y node.js
 
