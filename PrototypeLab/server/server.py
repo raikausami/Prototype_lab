@@ -7,7 +7,7 @@ import MySQLdb
 
 
 if __name__ == "__main__":
-    db = MySQLdb.connect(host="localhost", user="OWNER", passwd="12345", db="prototype_lab")
+    db = MySQLdb.connect(host="localhost", user="OWNER", passwd="12345", db="prototype_lab") 
     cur = db.cursor()
     ser = serial.Serial("/dev/ttyUSB0", 115200)
     lr = es920lr.ES920LR(ser)
@@ -31,16 +31,21 @@ if __name__ == "__main__":
             
             else:
                 payload_tpl = payload
-                sql_str = "SELECT Name FROM Employee WHERE iBeaconId = \'"
-                ibeaconId_str = payload_tpl[2]
-                ibeaconId_str = ibeaconId_str[:len(ibeaconId_str)-2]
+                tmp = payload_tpl[2][:len(payload_tpl[2])-2]
+                counter_str = tmp.split(',')[0]
+                ibeaconId_str = tmp.split(',')[1]
+                LoRaId_str = payload_tpl[1]
+                
+                sql_str = "INSERT INTO Occupation_info (Count, iBeaconId, LoRaId) VALUES(" + counter_str + ","
+                
+                if cur.execute(sql_str + "\'" + ibeaconId_str +"\', " + "\'" + LoRaId_str+"\');"):
+                    print "commit to db"
+                    db.commit()
             
-            if cur.execute(sql_str + ibeaconId_str + "';"):
-                print cur.fetchall()[0][0]
-            
-            time.sleep(0.01)
+            time.sleep(0.000001)
 
     except KeyboardInterrupt:
         lr.close()
-                cur.close()
-                db.close()
+        cur.execute("TRUNCATE TABLE Occupation_info;")
+        cur.close()
+        db.close()

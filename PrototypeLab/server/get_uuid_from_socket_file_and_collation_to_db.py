@@ -7,7 +7,9 @@ import MySQLdb
 
 
 
+
 if __name__ == "__main__":
+    counter = 1
     db = MySQLdb.connect(host="localhost", user="OWNER", passwd="12345", db="prototype_lab")
     cur = db.cursor()
     pro_sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -24,11 +26,25 @@ if __name__ == "__main__":
                 pass
 
             else:
-                sql_str = "SELECT Name FROM Employee WHERE iBeaconId = \'"
+                #sql_str = "SELECT Name FROM Employee WHERE iBeaconId = \'"
+                os.system("clear")
                 
-                if cur.execute(sql_str + recv_data + "\';"):
-                    print cur.fetchall()[0][0]
+                sql_str = "INSERT INTO Occupation_info (Count, iBeaconId, LoRaId) VALUES("+str(counter)+","
+    
+                uuid_lst = eval(recv_data)
+                
 
-    except Exception:
-        lr.close()
+                for uuid in uuid_lst:
+                    print uuid
+                    #print sql_str + "\'" + uuid + "\'"  + ", \'1111\');"
+
+                    if cur.execute(sql_str + "\'" + uuid + "\'"  + ", \'1111\');"):
+                        print "commit to db"
+                        db.commit()
+
+                
+                counter += 1
+
+
+    except KeyboardInterrupt:
         os.remove("./socket_file")

@@ -2,8 +2,32 @@
 const SOCKETFILE = '../socket_file'
 var array = ['a'];
 var net = require( 'net' );
-
-elapsed_ms =new Date().getTime() -start_ms;
+count_e = 0
+var io = setInterval(function(){
+        //console.log("finish")
+        
+        client = net.createConnection(SOCKETFILE)
+		.on('connect',()=>{
+            client.write('[]'+'\n')
+            client.flush
+            count_e = count_e+1
+            //if(count_e==3) client.close
+		})
+		.on('data',function(data){
+			data = data.toString();
+			client.write('2')
+		})
+		.on('error',function(data){
+			process.exit(1)
+		});
+        /*
+        client.write('[]'+'\n')
+        client.flush
+        count_e = count_e+1
+        if(count_e==3) client.close
+        */
+        },2000);
+start_ms =new Date().getTime();
 var Bleacon = require("bleacon");
 beacon_discover()
 
@@ -21,8 +45,8 @@ function client_communicate(str_2){
 
 				client.write(str_2+'\n')
 				client.flush
-                elapsed_ms =new Date().getTime() -start_ms;
-				//client.write('1')
+				start_ms =new Date().getTime();
+                //client.write('1')
 			}
 			//console.log(str_2)
 			////////////////client.write(str_2);
@@ -51,7 +75,7 @@ function except_duplex(data){
 }
 
 function beacon_discover(){
-    var start_ms =new Date().getTime();
+
     var count = 0
 
     Bleacon.startScanning();
@@ -60,6 +84,7 @@ function beacon_discover(){
                    "rssi" : bleacon['rssi']}
         except_duplex(payload.uuid)
         count = count+1
+        //var elapsed_ms =new Date().getTime() -start_ms;
         if (count>5){
             //console.log(elapsed_ms);
             array.unshift('[')
